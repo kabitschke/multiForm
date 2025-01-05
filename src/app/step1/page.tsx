@@ -1,37 +1,36 @@
-import { useNavigate } from 'react-router-dom';
-import { useForm, FormActions } from '@/contexts/formContext'
+'use client';
+
+import { useForm, FormActions } from '@/contexts/formContext';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, useEffect } from 'react';
 import { Theme } from '@/components/Theme';
 import * as C from './style';
-import { ChangeEvent, useEffect } from 'react';
 
-export const FormStep1 = () => {
-
-  const navigate = useNavigate();
+export default function Step1() {
+  const router = useRouter();
   const { state, dispatch } = useForm();
 
   useEffect(() => {
     dispatch({
       type: FormActions.setCurrentStep,
-      payload: 1
-    })
-  }, []);
+      payload: 1,
+    });
+  }, [dispatch]);
 
   const handleNextStep = () => {
     if (state.name !== '') {
-      navigate('/step2');
+      router.push('/step2');
     } else {
-      alert('Preencha os dados.')
+      alert('Preencha os dados.');
     }
-  }
+  };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: FormActions.setName,
-      payload: e.target.value
-
+      payload: e.target.value,
     });
-
-  }
+  };
 
   return (
     <Theme>
@@ -42,8 +41,10 @@ export const FormStep1 = () => {
 
         <hr />
 
-        <label htmlFor="">Seu nome Completo
-          <input type="text"
+        <label>
+          Seu nome completo
+          <input
+            type="text"
             autoFocus
             value={state.name}
             onChange={handleNameChange}
@@ -52,7 +53,6 @@ export const FormStep1 = () => {
 
         <button onClick={handleNextStep}>Próximo</button>
       </C.Container>
-
     </Theme>
-  )
+  );
 }

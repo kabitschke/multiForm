@@ -1,43 +1,41 @@
-import { useNavigate } from 'react-router-dom';
-import { useForm, FormActions } from '@/contexts/formContext'
-import { Theme } from '@/components/Theme';
-import * as C from './style';
+'use client';
+
+import { useForm, FormActions } from '@/contexts/formContext';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { Theme } from '@/components/Theme';
 import { SelectOptions } from '@/components/SelectOption';
-import { Link } from 'react-router-dom';
+import * as C from './style';
 
-export const FormStep2 = () => {
-
-  const navigate = useNavigate();
+export default function Step2() {
+  const router = useRouter();
   const { state, dispatch } = useForm();
-
 
   useEffect(() => {
     if (!state.name) {
-      navigate('/');
+      router.push('/step1');
     } else {
       dispatch({
         type: FormActions.setCurrentStep,
-        payload: 2
+        payload: 2,
       });
     }
-  }, [navigate, state.name, dispatch]);
+  }, [router, state.name, dispatch]);
 
   const handleNextStep = () => {
-    if (state.name !== '') {
-      navigate('/step2');
+    if (state.level !== undefined) {
+      router.push('/step3');
     } else {
-      alert('Preencha os dados.')
+      alert('Escolha uma opção.');
     }
-  }
+  };
+
   const setLevel = (level: number) => {
     dispatch({
       type: FormActions.setLevel,
-      payload: level
+      payload: level,
     });
-
-  }
-
+  };
 
   return (
     <Theme>
@@ -64,11 +62,11 @@ export const FormStep2 = () => {
           onClick={() => setLevel(1)}
         />
 
-
-        <Link to={'/'} className='backButton'>Voltar</Link>
+        <button onClick={() => router.push('/step1')} className="backButton">
+          Voltar
+        </button>
         <button onClick={handleNextStep}>Próximo</button>
       </C.Container>
-
     </Theme>
-  )
+  );
 }
